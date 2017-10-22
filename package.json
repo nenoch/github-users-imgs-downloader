@@ -1,0 +1,17 @@
+{
+  "name": "node-tsc",
+  "version": "1.0.0",
+  "description": "node/typescript app playground",
+  "main": "dist/index",
+  "types": "dist/index",  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/index.js"
+  },
+  "author": "Irene Canuti",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^8.0.46",
+    "typescript": "^2.5.3"
+  }
+}
