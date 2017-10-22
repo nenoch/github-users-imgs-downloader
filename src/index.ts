@@ -1,6 +1,5 @@
 import { recursive } from "./timer";
 import * as WebRequest from "web-request";
-import * as request from "request";
 import * as fs from "fs";
 
 console.log("I'm running");
@@ -19,18 +18,10 @@ async function getUserPic() {
     let options = {
         headers: headers
     };
-    let userPic = await WebRequest.json<any>(baseUrl + users[0], options);
-    console.log(userPic.avatar_url);
-    request(userPic.avatar_url, {encoding:'binary'}, (error: any, response: any, body: any) => {
-        fs.writeFile("imgs/nenoch.jpg", body, 'binary', (err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("The file was saved!");
-            }
-        })
-    })
+    let user = await WebRequest.json<any>(baseUrl + users[0], options);
+    let request = WebRequest.stream(user.avatar_url); 
+    let writePath = fs.createWriteStream('imgs/nene.jpg');
+    request.pipe(writePath); // pipe content directly to a file 
+    var response = await request.response; // wait for web-request to complete 
+    await new Promise(resolve => writePath.on('finish', () => resolve())); // wait for file-write to complete 
 }
-
-getUserPic();
-

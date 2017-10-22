@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const WebRequest = require("web-request");
-const request = require("request");
+// import * as request from "request";
 const fs = require("fs");
 console.log("I'm running");
 // let greetings = ["hello", "hi", "hola"];
@@ -26,16 +26,20 @@ function getUserPic() {
         };
         let userPic = yield WebRequest.json(baseUrl + users[0], options);
         console.log(userPic.avatar_url);
-        request(userPic.avatar_url, { encoding: 'binary' }, (error, response, body) => {
-            fs.writeFile("imgs/nenoch.jpg", body, 'binary', (err) => {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("The file was saved!");
-                }
-            });
-        });
+        let request = WebRequest.stream(userPic.avatar_url);
+        let writePath = fs.createWriteStream('imgs/nene.jpg');
+        request.pipe(writePath); // pipe content directly to a file 
+        var response = yield request.response; // wait for web-request to complete 
+        yield new Promise(resolve => writePath.on('finish', () => resolve())); // wait for file-write to complete 
+        // request(userPic.avatar_url, {encoding:'binary'}, (error: any, response: any, body: any) => {
+        //     fs.writeFile("imgs/nenoch.jpg", body, 'binary', (err) => {
+        //         if (err) {
+        //             console.log(err);
+        //         } else {
+        //             console.log("The file was saved!");
+        //         }
+        //     })
+        // })
     });
 }
 getUserPic();
