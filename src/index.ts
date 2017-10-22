@@ -12,16 +12,20 @@ const headers = {
     'User-Agent': 'anything apparently...'
 };
 
-let users = ["nenoch"]
+let users = ["nenoch", "josuevivash", "sliute", "shezdev"];
 
-async function getUserPic() {
-    let options = {
-        headers: headers
-    };
-    let user = await WebRequest.json<any>(baseUrl + users[0], options);
-    let request = WebRequest.stream(user.avatar_url); 
-    let writePath = fs.createWriteStream('imgs/nene.jpg');
-    request.pipe(writePath); // pipe content directly to a file 
-    var response = await request.response; // wait for web-request to complete 
-    await new Promise(resolve => writePath.on('finish', () => resolve())); // wait for file-write to complete 
+async function saveUsersPic(array: string[]) {
+    for (let user of array) {
+        let options = {
+            headers: headers
+        };
+        let userInfo = await WebRequest.json<any>(baseUrl + user, options);
+        let request = WebRequest.stream(userInfo.avatar_url); 
+        let writePath = fs.createWriteStream(`imgs/${user}_${new Date()}.jpg`);
+        request.pipe(writePath); // pipe content directly to a file 
+        var response = await request.response; // wait for web-request to complete 
+        await new Promise(resolve => writePath.on('finish', () => resolve())); // wait for file-write to complete 
+    }
 }
+
+saveUsersPic(users);
