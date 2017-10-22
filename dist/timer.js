@@ -20,11 +20,15 @@ function sayHi() {
     console.log("Hi");
 }
 exports.sayHi = sayHi;
-function recursive() {
+function recursive(array) {
     return __awaiter(this, void 0, void 0, function* () {
-        while (true) {
-            sayHi();
-            yield timer2Seconds();
+        for (let item of array) {
+            let flag = true;
+            while (flag) {
+                console.log(item);
+                yield timer2Seconds();
+                flag = false;
+            }
         }
     });
 }

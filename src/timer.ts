@@ -10,9 +10,13 @@ export function sayHi(){
     console.log("Hi");
 }
 
-export async function recursive(){
-    while (true) {
-        sayHi();
-        await timer2Seconds();
+export async function recursive(array: string[]){
+    for (let item of array) {
+        let flag = true;
+        while (flag) {
+            console.log(item);
+            await timer2Seconds();
+            flag = false;
+        }
     }
 }
